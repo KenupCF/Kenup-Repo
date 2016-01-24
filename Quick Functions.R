@@ -1,8 +1,8 @@
 ###Funçõezinhas do Caio###
 #===2015-10-22
 	##Resumos
-		force.numeric<-function(x){as.numeric(as.character(x))} #para fatores cujo nome é um número, e convertem mal para numerico
-		ch<-function(x) {as.character(x)} 						#para economizar linhas só mesmo 		
+		force.numeric<-function(x){as.numeric(as.character(x))}
+		ch<-function(x) {as.character(x)} 				
 	##Funções de caracteres	
 		omit.last<-function(x,y=1){ #omitir o último caracter (ou os últimos, se trocar o y)
 			substr(x,1,(nchar(x)-y))}			
