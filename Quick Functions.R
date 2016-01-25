@@ -1,4 +1,4 @@
-###Funçõezinhas do Caio###
+###Caio###
 #===2015-10-22
 	##Resumos
 		force.numeric<-function(x){as.numeric(as.character(x))}
