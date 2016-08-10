@@ -12,11 +12,10 @@
 ###start: POSIXct vector containing interval beginings##
 ###end:POSIXct vector containing interval ends##########
 ########################################################
-##v1.1 Agora com barra de progresso!##
 require(lubridate)
 interval2point<-function(df,start,end){
 	run.start<-now()
-	pb <- winProgressBar(title="Running point2interval", label="0% done", min=0, max=100, initial=0)
+	pb <- winProgressBar(title="Running interval2point", label="0% done", min=0, max=100, initial=0)
 	if(is(start)[1]!="POSIXct" | is(end)[1]!="POSIXct"){
 		stop("Time must be inserted as POSIXct class object")} 
 	if(tz(start) != tz(end)){
@@ -39,7 +38,7 @@ interval2point<-function(df,start,end){
 	setWinProgressBar(pb, progress*100, label=info)
 		x<-x+1
 	}
-	resu$time<-as.POSIXct(resu$time, origin="1970-01-01", tz=tz(start))
+	resu$time<-as.POSIXct(as.numeric(resu$time), origin="1970-01-01", tz=tz(start))
 	resu$horario_inicio<-NULL
 	resu$horario_fim<-NULL
 	close(pb)

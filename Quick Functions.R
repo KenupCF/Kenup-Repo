@@ -30,15 +30,18 @@
 	}
 
 	tidy<-function(x){
+		x<-gsub(x=x,"^[^[:alnum:]]","")
 		x<-trim(x)
 		x<-gsub(x=x,"^-\\s","")
 		x<-gsub(x=x,"-$","")
 		x<-gsub(x=x,"\\n"," ")
 		x<-gsub(x=x,"\\t"," ")
 		x<-gsub(x=x,"\\s\\s+"," ")
-		return(x)
+		return(as.character(x))
 	}
-		
+	
+is.nan.data.frame <- function(x)
+do.call(cbind, lapply(x, is.nan))	
 		# returns string w/o leading whitespace
 			trim.leading <- function (x)  sub("^\\s+", "", x)
 		# returns string w/o trailing whitespace
@@ -101,7 +104,27 @@
 				index1 <- x - ( 26 * index2 ) - ((26^2) * index3)
 				y<-paste0(LETTERS[index3],LETTERS[index2],LETTERS[index1])
 				return(y)}
-###Só pra coisas do Mestrado (por enquanto)
+###GERAL###
+	duplicated.full<-function(x){return(duplicated(x)|duplicated(x,fromLast=TRUE))}
+	pull <- function(x,y) {x[,if(is.name(substitute(y))) deparse(substitute(y)) else y, drop = FALSE][[1]]}
+	js.scrape<-function(x){
+		writeLines(sprintf("
+			var webPage = require('webpage');
+			var page = webPage.create();
+			var fs = require('fs');
+			var path = 'temp.html'
+
+			page.open('%s', function (status) {
+			  var content = page.content;
+			  fs.write(path,content,'w')
+			  phantom.exit();
+			});",x),con="scrape.js")
+			
+		system("phantomjs scrape.js")
+		return(htmlParse(".//temp.html"))
+	}					
+				
+				###Só pra coisas do Mestrado (por enquanto)
 	##Operações com tempo
 		myear<-function(x,abbr=TRUE){
 			if(is.POSIXct(x)==FALSE){stop("'x' must be a POSIXct object")}
@@ -131,11 +154,30 @@
 		imposib.mod<-function(x){  #x is a vector of covariate names
 			any(c(
 				sum(str_detect(x,"mo.rfall"))>=2, 						#modelos que incluem precipitação mensal em mais de um período
+				any(duplicated(gsub(x=x,'.log',''))),					#modelos com seu valor log e valor sem log
 				(any(x%in%time.catg.cov) & any(x%in%time.cont.cov)),	#models with a categorical and continuous temporal effect
 				(any(x=="rainfall") & any(x=="mo.rfall")),				#modelos que contenham precipitação em intervalos e ao mesmo tempo no mesmo mes
 				(any(x=="sample_month") & any(x=="time"))))==FALSE}		#models with an effect of both surveys and sampling occasions
 				
-duplicated.full<-function(x){return(duplicated(x)|duplicated(x,fromLast=TRUE))}
+
+
+####DPLYR functions
+
+
+
+
+growth<-function(x,y,percent=TRUE){
+	if(length(x)!=length(y)){stop("'x' and 'y' must be the same length")}
+	x<-as.numeric(x)
+	y<-as.numeric(y)
+	gr<-numeric()
+	for (g in 1:(length(x)-1)){
+		gr[g]<-(((x[g+1]/x[g])^inv(y[g+1]-y[g]))-1)*ifelse(percent==TRUE,100,1)
+	}
+	names(gr)<-paste(y[1:(length(y)-1)],y[2:length(y)],sep='-')
+	gr<-as.data.frame(gr);colnames(gr)<-paste0('Crescimento',ifelse(percent==TRUE," (%)",""))
+	return(gr)
+	}
 
 
 ####EXPERIMENTAIS
@@ -179,4 +221,59 @@ totalizer<-function(d.f,factors,numerals,na.rm=TRUE,sumRows=FALSE,sumCols=TRUE){
 	temp_d.f<-cbind(temp_d.f,Total=rowSums(apply(temp_d.f[,numerals],2,force_numeric)))}
 	temp_d.f[temp_d.f==0]<-NA
 	return(temp_d.f)
+	}
+
+##Mapas
+
+	kenup.scale<-function (x, y, relwidth = 0.15, metric = TRUE, ratio = TRUE, character=TRUE,
+		...) #alteração simples da função maps::map.scale()
+	{ 
+	   format.pretty <- function(x, digits = 2) {
+			x = signif(x, 2)
+			prettyNum(formatC(x, format = "fg", digits = digits), 
+				big.mark = ".")
+		}
+		usr <- par("usr")
+		if (missing(y)) 
+			y <- (9 * usr[3] + usr[4])/10
+		if (abs(y) >= 90) 
+			warning("location of scale out of this world!")
+		if (missing(x)) 
+			x <- (9 * usr[1] + usr[2])/10
+		cosy <- cos((2 * pi * y)/360)
+		perdeg <- (2 * pi * (6356.78 + 21.38 * cosy) * cosy)/360
+		scale <- (perdeg * 1e+05)/(2.54 * (par("pin")/diff(par("usr"))[-2])[1])
+		if (metric) 
+			unit <- "km"
+		else {
+			perdeg <- perdeg * 0.6213712
+			unit <- "mi"
+		}
+		len <- perdeg * relwidth * (usr[2] - usr[1])
+		ats <- pretty(c(0, len), n = 2)
+		nats <- length(ats)
+		labs <- as.character(ats)
+		labs[nats] <- paste(labs[nats], unit)
+		linexy <- matrix(NA, ncol = 2, nrow = 3 * nats)
+		colnames(linexy) <- c("x", "y")
+		cxy <- par("cxy")
+		dy <- cxy[2] * par("tcl")
+		dx <- ats[nats]/perdeg/(nats - 1)
+		linexy[1, ] <- c(x, y)
+		linexy[2, ] <- c(x, y + dy)
+		for (i in 1:(nats - 1)) {
+			linexy[3 * i, ] <- c(x + (i - 1) * dx, y)
+			linexy[3 * i + 1, ] <- c(x + i * dx, y)
+			linexy[3 * i + 2, ] <- c(x + i * dx, y + dy)
+		}
+		# lines(linexy)
+		# text(x + ats/perdeg, y + dy - 0.5 * cxy[2], labs, adj = c(0.4, 
+			# 0.5), ...)
+		if(character==FALSE){
+		if (ratio) {
+			text(x, y + 0.5 * cxy[2], paste("1:", format.pretty(scale), 
+				sep = ""), adj = 0, ...)
+		invisible(scale)}} else{
+		return(paste("1:", format.pretty(scale),sep=""))
+		}
 	}

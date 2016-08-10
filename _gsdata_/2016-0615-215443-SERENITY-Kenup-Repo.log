@@ -1,0 +1,29 @@
+2016-06-15 21:54:43: -- Analysis Started by User
+2016-06-15 21:54:44: R: State file does not exist: G:/00-General/03-Trabalho/03-Programação/01-R/Kenup-Repo/_gsdata_/_file_state_v4._gs
+2016-06-15 21:54:44: Changes: 20, Conflicts: 0, CopyTime: 0, CopyState: 2/0, Errors: 0, All: 130
+2016-06-15 21:54:44: Left to Right: Copy File: 20 Copy State: 2 
+2016-06-15 21:54:44: -- Analysis Complete. Time 00:00:01, Speed: 24 files/s
+2016-06-15 21:54:44: 
+2016-06-15 22:03:27: == Sync Started by User
+2016-06-15 22:03:27: Copy New 'C:/Users/Kenup/Dropbox/03-Trabalho/03-Programação/01-R/Kenup-Repo/.gitattributes' -> 'G:/00-General/03-Trabalho/03-Programação/01-R/Kenup-Repo/.gitattributes'
+2016-06-15 22:03:28: Copy New 'C:/Users/Kenup/Dropbox/03-Trabalho/03-Programação/01-R/Kenup-Repo/.gitignore' -> 'G:/00-General/03-Trabalho/03-Programação/01-R/Kenup-Repo/.gitignore'
+2016-06-15 22:03:28: Copy New 'C:/Users/Kenup/Dropbox/03-Trabalho/03-Programação/01-R/Kenup-Repo/Functions/Antigas/Independent_records v2.1 (2).R' -> 'G:/00-General/03-Trabalho/03-Programação/01-R/Kenup-Repo/Functions/Antigas/Independent_records v2.1 (2).R'
+2016-06-15 22:03:28: Copy New 'C:/Users/Kenup/Dropbox/03-Trabalho/03-Programação/01-R/Kenup-Repo/Functions/Antigas/Independent_records v2.1.R' -> 'G:/00-General/03-Trabalho/03-Programação/01-R/Kenup-Repo/Functions/Antigas/Independent_records v2.1.R'
+2016-06-15 22:03:28: Copy New 'C:/Users/Kenup/Dropbox/03-Trabalho/03-Programação/01-R/Kenup-Repo/Functions/Antigas/Independent_records v3.0' -> 'G:/00-General/03-Trabalho/03-Programação/01-R/Kenup-Repo/Functions/Antigas/Independent_records v3.0'
+2016-06-15 22:03:28: Copy New 'C:/Users/Kenup/Dropbox/03-Trabalho/03-Programação/01-R/Kenup-Repo/Functions/Antigas/Independent_records.r' -> 'G:/00-General/03-Trabalho/03-Programação/01-R/Kenup-Repo/Functions/Antigas/Independent_records.r'
+2016-06-15 22:03:28: Copy New 'C:/Users/Kenup/Dropbox/03-Trabalho/03-Programação/01-R/Kenup-Repo/Functions/Antigas/Modificando função independent records.R' -> 'G:/00-General/03-Trabalho/03-Programação/01-R/Kenup-Repo/Functions/Antigas/Modificando função independent records.R'
+2016-06-15 22:03:28: Copy New 'C:/Users/Kenup/Dropbox/03-Trabalho/03-Programação/01-R/Kenup-Repo/Functions/Antigas/point2interval v1.0.R' -> 'G:/00-General/03-Trabalho/03-Programação/01-R/Kenup-Repo/Functions/Antigas/point2interval v1.0.R'
+2016-06-15 22:03:28: Copy New 'C:/Users/Kenup/Dropbox/03-Trabalho/03-Programação/01-R/Kenup-Repo/Functions/Antigas/Script para renomear fotos v1.0.R' -> 'G:/00-General/03-Trabalho/03-Programação/01-R/Kenup-Repo/Functions/Antigas/Script para renomear fotos v1.0.R'
+2016-06-15 22:03:29: Copy New 'C:/Users/Kenup/Dropbox/03-Trabalho/03-Programação/01-R/Kenup-Repo/Functions/Antigas/Script para renomear fotos v1.1.R' -> 'G:/00-General/03-Trabalho/03-Programação/01-R/Kenup-Repo/Functions/Antigas/Script para renomear fotos v1.1.R'
+2016-06-15 22:03:29: Copy New 'C:/Users/Kenup/Dropbox/03-Trabalho/03-Programação/01-R/Kenup-Repo/Functions/Antigas/Script para renomear fotos v1.2.R' -> 'G:/00-General/03-Trabalho/03-Programação/01-R/Kenup-Repo/Functions/Antigas/Script para renomear fotos v1.2.R'
+2016-06-15 22:03:29: Copy New 'C:/Users/Kenup/Dropbox/03-Trabalho/03-Programação/01-R/Kenup-Repo/Functions/spp.overlap' -> 'G:/00-General/03-Trabalho/03-Programação/01-R/Kenup-Repo/Functions/spp.overlap'
+2016-06-15 22:03:29: Copy New 'C:/Users/Kenup/Dropbox/03-Trabalho/03-Programação/01-R/Kenup-Repo/Importação de Ratings no Filmow.R' -> 'G:/00-General/03-Trabalho/03-Programação/01-R/Kenup-Repo/Importação de Ratings no Filmow.R'
+2016-06-15 22:03:29: Copy New 'C:/Users/Kenup/Dropbox/03-Trabalho/03-Programação/01-R/Kenup-Repo/Independent_records v3.0.R' -> 'G:/00-General/03-Trabalho/03-Programação/01-R/Kenup-Repo/Independent_records v3.0.R'
+2016-06-15 22:03:29: Copy New 'C:/Users/Kenup/Dropbox/03-Trabalho/03-Programação/01-R/Kenup-Repo/point2interval v1.1.R' -> 'G:/00-General/03-Trabalho/03-Programação/01-R/Kenup-Repo/point2interval v1.1.R'
+2016-06-15 22:03:29: Copy New 'C:/Users/Kenup/Dropbox/03-Trabalho/03-Programação/01-R/Kenup-Repo/Quick Functions.R' -> 'G:/00-General/03-Trabalho/03-Programação/01-R/Kenup-Repo/Quick Functions.R'
+2016-06-15 22:03:31: Copy New 'C:/Users/Kenup/Dropbox/03-Trabalho/03-Programação/01-R/Kenup-Repo/README.md' -> 'G:/00-General/03-Trabalho/03-Programação/01-R/Kenup-Repo/README.md'
+2016-06-15 22:03:31: Copy New 'C:/Users/Kenup/Dropbox/03-Trabalho/03-Programação/01-R/Kenup-Repo/Renomeador de Fotos v1.1.R' -> 'G:/00-General/03-Trabalho/03-Programação/01-R/Kenup-Repo/Renomeador de Fotos v1.1.R'
+2016-06-15 22:03:31: Copy New 'C:/Users/Kenup/Dropbox/03-Trabalho/03-Programação/01-R/Kenup-Repo/Script para renomear fotos v1.3.R' -> 'G:/00-General/03-Trabalho/03-Programação/01-R/Kenup-Repo/Script para renomear fotos v1.3.R'
+2016-06-15 22:03:31: Copy New 'C:/Users/Kenup/Dropbox/03-Trabalho/03-Programação/01-R/Kenup-Repo/test.R' -> 'G:/00-General/03-Trabalho/03-Programação/01-R/Kenup-Repo/test.R'
+2016-06-15 22:03:32: == Sync Complete. Time: 00:00:05, Speed: 9.74 KB/s, OK: 22, Errors: 0
+2016-06-15 22:03:32: 
