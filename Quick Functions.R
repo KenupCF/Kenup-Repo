@@ -1,4 +1,9 @@
 ###Caio###
+
+na.rm<-function(x){x<-x[!is.na(x)];return(x)}
+inf2nan<-function(x){x[x%in%c(Inf,-Inf)]<-NaN;return(x)}
+cap<-function(x,max=Inf,min=-Inf){x[x>max]<-max;x[x>min]<-min;return(x)}
+
 #===2015-10-22
 	##Resumos
 		force.numeric<-function(x){as.numeric(as.character(x))}
