@@ -1,8 +1,15 @@
+####Created by Caio Kenup
+####Based on an idea by Sarah Converse
+####caio.kenup@gmail.com
+####2019-12-13
+
+#Function to find the true Min and Max values of a PERT distribution based on a 4-point survey
 solvePERT<-function(Mode,Min,Max,Shape=4,
 					Conf=1,precision=1,
 					naturalMax=Inf,naturalMin=-Inf,second.run=T){
 
-#Functin to find the true Min and Max values of a PERT distribution based on a 4-point survey
+
+
 
 #Mode: The most likely value, as answered by the expert
 #Min: The smallest plausible value, as answered by the expert
