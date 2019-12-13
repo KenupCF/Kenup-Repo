@@ -53,8 +53,8 @@ grid<-expand.grid(list.min=list.min,list.max=list.max)%>%
 	#remove impossible entries
 	filter(list.max>list.min,list.min<=Mode,list.max>=Mode)%>%
 	#clip entries with values above the natural limits
-	mutate(list.max=sapply(list.max,min,naturalMax-1e-5),
-			list.min=sapply(list.min,max,naturalMin+1e-5))%>% 
+	mutate(list.max=sapply(list.max,min,naturalMax),
+			list.min=sapply(list.min,max,naturalMin))%>% 
 	filter(!duplicated(data.frame(list.max,list.min)))	
 
 #Reverse engineers to try and find the combinations that give rise to the declared value s
@@ -63,8 +63,18 @@ rev.eng.error<-sapply(1:nrow(grid),function(i){ #for each row,
 	#Probabilities to assess
 	p.vec<-c(0+(rem.unc/2),1-(rem.unc/2))
 	
+	onLowerBoundary<-grid$list.min[i]==naturalMin
+	onUpperBoundary<-grid$list.max[i]==naturalMax
+	
+	
+	
 	#Vector of comparisons
 	comparison<-c(Min,Max)
+		if(onLowerBoundary){comparison[1]<-NA
+			p.vec<-c(0,.95)}
+		if(onUpperBoundary){comparison[2]<-NA
+			p.vec<-c(.05,1)}
+		if(onLowerBoundary & onUpperBoundary){p.vec<-c(0,1)}	
 
 	#Find the quantiles for the candidate values
 	candid<-qpert(min=grid$list.min[i],max=grid$list.max[i],mode=Mode,shape=Shape,p=p.vec)
@@ -95,8 +105,8 @@ grid<-expand.grid(list.min=list.min2,list.max=list.max2)%>%
 	#remove impossible entries
 	filter(list.max>list.min,list.min<=Mode,list.max>=Mode)%>%
 	#clip entries with values above the natural limits
-	mutate(list.max=sapply(list.max,min,naturalMax-1e-5),
-			list.min=sapply(list.min,max,naturalMin+1e-5))%>% 
+	mutate(list.max=sapply(list.max,min,naturalMax),
+			list.min=sapply(list.min,max,naturalMin))%>% 
 	filter(!duplicated(data.frame(list.max,list.min)))	
 
 #Reverse engineers to try and find the combinations that give rise to the declared value s
@@ -105,8 +115,18 @@ rev.eng.error<-sapply(1:nrow(grid),function(i){ #for each row,
 	#Probabilities to assess
 	p.vec<-c(0+(rem.unc/2),1-(rem.unc/2))
 	
+	onLowerBoundary<-grid$list.min[i]==naturalMin
+	onUpperBoundary<-grid$list.max[i]==naturalMax
+	
+	
+	
 	#Vector of comparisons
 	comparison<-c(Min,Max)
+		if(onLowerBoundary){comparison[1]<-NA
+			p.vec<-c(0,.95)}
+		if(onUpperBoundary){comparison[2]<-NA
+			p.vec<-c(.05,1)}
+		if(onLowerBoundary & onUpperBoundary){p.vec<-c(0,1)}	
 
 	#Find the quantiles for the candidate values
 	candid<-qpert(min=grid$list.min[i],max=grid$list.max[i],mode=Mode,shape=Shape,p=p.vec)
