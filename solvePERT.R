@@ -42,18 +42,14 @@ dist2Min<-abs(Min-naturalMin)
 dist2Max<-abs(Max-naturalMax)
 
 #Create a vector of candidate minimum values
-list.min<-sapply(c(seq(from=Min-(range*3),to=Min,by=precision),Min,
-#Add a `marginal` value, close to the naturalMin
-naturalMin+1e-5),max,naturalMin+1e-5)
+list.min<-c(seq(from=Min-(range*3),to=Min,length.out=100),Min)
 list.min<-list.min[!duplicated(list.min)]
-if(length(list.min)<10){list.min<-seq(from=naturalMin+1e-5,to=Min,length.out=10)}
+# if(length(list.min)<10){list.min<-seq(from=naturalMin+1e-5,to=Min,length.out=10)}
 
 #Create a vector of candidate max values
-list.max<-sapply(c(Max,seq(to=Max+(range*3),from=Max,by=precision),
-#Add a `marginal` value, close to the naturalMax
-naturalMax-1e-5),min,naturalMax-1e-5)
+list.max<-c(Max,seq(to=Max+(range*3),from=Max,length.out=100))
 list.max<-list.max[!duplicated(list.max)]
-if(length(list.max)<10){list.max<-seq(from=naturalMax-1e-5,to=Max,length.out=10)}
+# if(length(list.max)<10){list.max<-seq(from=naturalMax-1e-5,to=Max,length.out=10)}
 
 min.error<-(Min-sapply(list.min,function(x){qpert(p = 	  rem.unc/2,min = x,mode = Mode,max = Max)}))^2
 max.error<-(Max-sapply(list.max,function(x){qpert(p = 1-(rem.unc/2),min = Min,mode = Mode,max = x)}))^2
@@ -99,26 +95,45 @@ rev.eng.error<-sapply(1:nrow(grid),function(i){ #for each row,
 winner<-which(rev.eng.error==min(rev.eng.error,na.rm=T)) #which set of values minimizes the error
 
 #get the top 5 more precise pairs of candidate values
-top5<-which(rev.eng.error%in%sort(rev.eng.error,decreasing=FALSE)[1:5])
+top10<-which(rev.eng.error%in%sort(rev.eng.error,decreasing=FALSE)[1:10])
 
 ####Run it again, for greater precision
 if(second.run){
 
 # Create another set of candidate values, with greater precision
-list.min2<-seq(from=min(grid[top5,1])*.5,to=max(grid[top5,1])*1.5,by=precision/5)
-list.max2<-seq(from=min(grid[top5,2])*.5,to=max(grid[top5,2])*1.5,by=precision/5)
-
+list.min2<-seq(from=min(c(grid[top10,1]*1,grid[top10,1]*1)),
+				to=max(c(grid[top10,1]*1,grid[top10,1]*1)),length.out=100)
+list.max2<-seq(from=min(c(grid[top10,2]*1,grid[top10,2]*1)),
+				to=max(c(grid[top10,2]*1,grid[top10,2]*1)),length.out=100)
+				
 grid<-expand.grid(list.min=list.min2,list.max=list.max2)%>%
 	#remove impossible entries
 	filter(list.max>list.min,list.min<=Mode,list.max>=Mode)%>%
 	#clip entries with values above the natural limits
-	mutate(list.max=sapply(list.max,min,naturalMax-1e-5),
-			list.min=sapply(list.min,max,naturalMin+1e-5))%>% 
+	mutate(list.max=sapply(list.max,min,naturalMax),
+			list.min=sapply(list.min,max,naturalMin))%>% 
 	filter(!duplicated(data.frame(list.max,list.min)))	
 
 #Reverse engineers to try and find the combinations that give rise to the declared value s
 #Reverse engineers to try and find the combinations that give rise to the declared value s
 rev.eng.error<-sapply(1:nrow(grid),function(i){ #for each row,
+	
+	
+	#Probabilities to assess
+		p.vec<-c(0+(rem.unc/2),1-(rem.unc/2))
+
+		onLowerBoundary<-grid[i,1]==naturalMin
+		onUpperBoundary<-grid[i,2]==naturalMax
+
+		#Vector of comparisons
+		comparison<-c(Min,Max)
+			if(onLowerBoundary){comparison[1]<-NA
+				p.vec<-c(0,.95)}
+			if(onUpperBoundary){comparison[2]<-NA
+				p.vec<-c(.05,1)}
+			if(onLowerBoundary & onUpperBoundary){p.vec<-c(0,1)}
+
+	
 	
 	#Find the quantiles for the candidate values
 	candid<-qpert(min=grid$list.min[i],max=grid$list.max[i],mode=Mode,shape=Shape,p=p.vec)
@@ -136,13 +151,17 @@ rev.eng.error<-sapply(1:nrow(grid),function(i){ #for each row,
 winner<-which(rev.eng.error==min(rev.eng.error,na.rm=T)) #which set of values minimizes the error
 }
 
-return(list(
+resu<-
+	list(
 	trueMin=grid[winner,1]*(!onLowerBoundary) + (Min*onLowerBoundary),
 	trueMax=grid[winner,2]*(!onUpperBoundary) + (Max*onUpperBoundary),
-	RMSE=min(rev.eng.error,na.rm=T)))
+	RMSE=min(rev.eng.error,na.rm=T))
 } else{
-return(list(trueMin=Min,trueMax=Max,RMSE=0))
+resu<-list(trueMin=Min,trueMax=Max,RMSE=0)
 
 }
+
+
+return(resu)
 
 }
