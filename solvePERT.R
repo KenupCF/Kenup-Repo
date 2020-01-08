@@ -71,9 +71,9 @@ onUpperBoundary<-Max==naturalMax
 #Vector of comparisons
 comparison<-c(Min,Max)
 	if(onLowerBoundary){comparison[1]<-NA
-		p.vec<-c(0,.95)}
+		p.vec<-c(0,1-rem.unc)}
 	if(onUpperBoundary){comparison[2]<-NA
-		p.vec<-c(.05,1)}
+		p.vec<-c(0+rem.unc,1)}
 	if(onLowerBoundary & onUpperBoundary){p.vec<-c(0,1)}
 
 #Reverse engineers to try and find the combinations that give rise to the declared value s
@@ -128,9 +128,9 @@ rev.eng.error<-sapply(1:nrow(grid),function(i){ #for each row,
 		#Vector of comparisons
 		comparison<-c(Min,Max)
 			if(onLowerBoundary){comparison[1]<-NA
-				p.vec<-c(0,.95)}
+				p.vec<-c(0,1-rem.unc)}
 			if(onUpperBoundary){comparison[2]<-NA
-				p.vec<-c(.05,1)}
+				p.vec<-c(0+rem.unc,1)}
 			if(onLowerBoundary & onUpperBoundary){p.vec<-c(0,1)}
 
 	
