@@ -1,7 +1,7 @@
 ####Created by Caio Kenup
 ####Based on an idea by Sarah Converse
 ####caio.kenup@gmail.com
-####2019-12-13
+####2020-01-20
 
 #Function to find the true Min and Max values of a PERT distribution based on a 4-point survey
 solvePERT<-function(Mode,Min,Max,Shape=4,
@@ -114,6 +114,10 @@ grid<-expand.grid(list.min=list.min2,list.max=list.max2)%>%
 			list.min=sapply(list.min,max,naturalMin))%>% 
 	filter(!duplicated(data.frame(list.max,list.min)))	
 
+bothBoundaries<-all(grid$list.min==naturalMin) & all(grid$list.max==naturalMax)
+
+if(!bothBoundaries){
+
 #Reverse engineers to try and find the combinations that give rise to the declared value s
 #Reverse engineers to try and find the combinations that give rise to the declared value s
 rev.eng.error<-sapply(1:nrow(grid),function(i){ #for each row,
@@ -149,6 +153,10 @@ rev.eng.error<-sapply(1:nrow(grid),function(i){ #for each row,
 
 
 winner<-which(rev.eng.error==min(rev.eng.error,na.rm=T)) #which set of values minimizes the error
+}else{
+  rev.eng.error<-NaN
+  winner<-1}
+
 }
 
 resu<-
