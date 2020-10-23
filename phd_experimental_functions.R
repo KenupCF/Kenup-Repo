@@ -529,135 +529,135 @@ return(resu)
   
  
 priorPDF<-function(L){
-require(mc2d)
-
-	dFUN<-list(beta=dbeta,norm=dnorm,unif=dunif,binom=dbinom,pert=dpert,
-					gamma=dgamma,poisson=dpois,lnorm=dlnorm,exp=dexp)
-					
-	qFUN<-list(beta=qbeta,norm=qnorm,unif=qunif,binom=qbinom,pert=qpert,
-					gamma=qgamma,poisson=qpois,lnorm=qlnorm,exp=qexp)
-					
-	meanFUN<-list(beta=function(x,y){x/(x+y)},
-					norm=function(x,y){x},
-					gamma=function(x,y){x/y},
-					unif=function(x,y){(x+y)/2},
-					binom=function(x,y){x*y},
-					pert=function(a,b,c,d){(a+(d*b)+c)/(d+2)},
-					lnorm=function(x,y){exp(x+((y^2)/2))},
-					exp=function(x){x^-1},
-					poisson=function(x){x})
-
-	hyperPar<-list(norm=c("mean","sd"),
-					 lnorm=c("mean","sd"),
-					 unif=c("min","max"),
-					 binom=c("size","p"),
-					 chisq=c('df','ncp'),
-					 logis=c("location","scale"),
-					 pert = c("min","mode","max","shape"),
-					 gamma=c("shape","rate"),
-					 beta=c("alfa","beta"),
-					 exp=c("rate"),
-					 poisson=c("lambda"))
-
-	discrete.dists<-c("poisson","binom")
-				
-	resu<-lapply(names(L),function(n){
-		
-		x<-L[[n]]
-		
-		dist<-as.character(x$dist)
-		
-		x<-x[,
-			colnames(x)%in%c(
-				"min","mode","max","shape","rate","mean","sd","lambda","shape1","shape2")]
+  require(mc2d)
   
-		x$dist<-dist
-		x$dist<-as.character(x$dist)
-		
-		npars<-length(hyperPar[[dist]])
-				
-		if(npars==1){
-            lim<-qFUN[[dist]](c(.0001,.9999),x[1,1])
-            values<-seq(from=lim[1],to=lim[2],length.out=5e3)
-            if(dist%in%discrete.dists){values<-c(floor(values),ceiling(values));values<-values[!duplicated(values)]}
-            y<-dFUN[[dist]](values,x[1,1])
-            if(dist%in%discrete.dists){
-				y2<-data.frame(xc=seq(from=min(values),to=max(values),length.out=5e3))
-				y2$values<-floor(y2$xc)
-				y3<-data.frame(d=y,values=values)
-				ym<-merge(y2,y3,by="values")
-				values<-ym$xc
-				y<-ym$d
-			}
-			
-            z<-data.frame(
-               PDF=y,values=values,
-               dist=dist,
-			   parName=n,
-               pars=paste(
-                 hyperPar[[dist]][1],"=",x[1,1]))
-          }
-		
-		if(npars==2){
-            lim<-qFUN[[dist]](c(.0001,.9999),x[1,1],x[1,2])
-            values<-seq(from=lim[1],to=lim[2],length.out=5e3)
-            if(dist%in%discrete.dists){values<-c(floor(values),ceiling(values));values<-values[!duplicated(values)]}
-            y<-dFUN[[dist]](values,x[1,1],x[1,2])
-            if(dist%in%discrete.dists){
-				y2<-data.frame(xc=seq(from=min(values),to=max(values),length.out=5e3))
-				y2$values<-floor(y2$xc)
-				y3<-data.frame(d=y,values=values)
-				ym<-merge(y2,y3,by="values")
-				values<-ym$xc
-				y<-ym$d
-			}
-			
-            z<-data.frame(
-               PDF=y,values=values,
-               dist=dist,
-			   par=n,
-			   pars=paste(
-                 hyperPar[[dist]][1],"=",x[1,1],
-                 "/",
-                 hyperPar[[dist]][2],"=",x[1,2]))
-          }
-		if(npars==4 & dist =="pert"){
-            lim<-qFUN[[dist]](c(0,1),x[1,1],x[1,2],x[1,3],x[1,4])
-            values<-seq(from=lim[1],to=lim[2],length.out=5e3)
-            if(dist%in%discrete.dists){values<-c(floor(values),ceiling(values));values<-values[!duplicated(values)]}
-            y<-dFUN[[dist]](values,x[1,1],x[1,2],x[1,3],x[1,4])
-            if(dist%in%discrete.dists){
-				y2<-data.frame(xc=seq(from=min(values),to=max(values),length.out=5e3))
-				y2$values<-floor(y2$xc)
-				y3<-data.frame(d=y,values=values)
-				ym<-merge(y2,y3,by="values")
-				values<-ym$xc
-				y<-ym$d
-			}
-			
-            z<-data.frame(
-               PDF=y,values=values,
-               dist=dist,
-			   par=n,
-			   pars=paste(
-                 hyperPar[[dist]][1],"=",x[1,1],
-                 "/",
-                 hyperPar[[dist]][2],"=",x[1,2],
-                 "/",
-                 hyperPar[[dist]][3],"=",x[1,3],
-                 "/",
-                 hyperPar[[dist]][4],"=",x[1,4]))
-          }
+  dFUN<-list(beta=dbeta,norm=dnorm,unif=dunif,binom=dbinom,pert=dpert,
+             gamma=dgamma,poisson=dpois,lnorm=dlnorm,exp=dexp)
   
-		return(z)
-		})			
-
-	resu<-do.call(rbind,resu)
-	
-	return(resu)
-
+  qFUN<-list(beta=qbeta,norm=qnorm,unif=qunif,binom=qbinom,pert=qpert,
+             gamma=qgamma,poisson=qpois,lnorm=qlnorm,exp=qexp)
+  
+  meanFUN<-list(beta=function(x,y){x/(x+y)},
+                norm=function(x,y){x},
+                gamma=function(x,y){x/y},
+                unif=function(x,y){(x+y)/2},
+                binom=function(x,y){x*y},
+                pert=function(a,b,c,d){(a+(d*b)+c)/(d+2)},
+                lnorm=function(x,y){exp(x+((y^2)/2))},
+                exp=function(x){x^-1},
+                poisson=function(x){x})
+  
+  hyperPar<-list(norm=c("mean","sd"),
+                 lnorm=c("mean","sd"),
+                 unif=c("min","max"),
+                 binom=c("size","p"),
+                 chisq=c('df','ncp'),
+                 logis=c("location","scale"),
+                 pert = c("min","mode","max","shape"),
+                 gamma=c("shape","rate"),
+                 beta=c("alfa","beta"),
+                 exp=c("rate"),
+                 poisson=c("lambda"))
+  
+  discrete.dists<-c("poisson","binom")
+  
+  resu<-lapply(names(L),function(n){
+    
+    x<-L[[n]]
+    
+    dist<-as.character(x$dist)
+    
+    x<-x[,
+         colnames(x)%in%c(
+           "min","mode","max","shape","rate","mean","sd","lambda","shape1","shape2")]
+    
+    x$dist<-dist
+    x$dist<-as.character(x$dist)
+    
+    npars<-length(hyperPar[[dist]])
+    
+    if(npars==1){
+      lim<-qFUN[[dist]](c(.0001,.9999),x[1,1])
+      values<-seq(from=lim[1],to=lim[2],length.out=5e3)
+      if(dist%in%discrete.dists){values<-c(floor(values),ceiling(values));values<-values[!duplicated(values)]}
+      y<-dFUN[[dist]](values,x[1,1])
+      if(dist%in%discrete.dists){
+        y2<-data.frame(xc=seq(from=min(values),to=max(values),length.out=5e3))
+        y2$values<-floor(y2$xc)
+        y3<-data.frame(d=y,values=values)
+        ym<-merge(y2,y3,by="values")
+        values<-ym$xc
+        y<-ym$d
+      }
+      
+      z<-data.frame(
+        PDF=y,values=values,
+        dist=dist,
+        parName=n,
+        pars=paste(
+          hyperPar[[dist]][1],"=",x[1,1]))
+    }
+    
+    if(npars==2){
+      lim<-qFUN[[dist]](c(.0001,.9999),x[1,1],x[1,2])
+      values<-seq(from=lim[1],to=lim[2],length.out=5e3)
+      if(dist%in%discrete.dists){values<-c(floor(values),ceiling(values));values<-values[!duplicated(values)]}
+      y<-dFUN[[dist]](values,x[1,1],x[1,2])
+      if(dist%in%discrete.dists){
+        y2<-data.frame(xc=seq(from=min(values),to=max(values),length.out=5e3))
+        y2$values<-floor(y2$xc)
+        y3<-data.frame(d=y,values=values)
+        ym<-merge(y2,y3,by="values")
+        values<-ym$xc
+        y<-ym$d
+      }
+      
+      z<-data.frame(
+        PDF=y,values=values,
+        dist=dist,
+        par=n,
+        pars=paste(
+          hyperPar[[dist]][1],"=",x[1,1],
+          "/",
+          hyperPar[[dist]][2],"=",x[1,2]))
+    }
+    if(npars==4 & dist =="pert"){
+      lim<-qFUN[[dist]](c(0,1),x[1,"min"],x[1,"mode"],x[1,"max"],x[1,"shape"])
+      values<-seq(from=lim[1],to=lim[2],length.out=5e3)
+      if(dist%in%discrete.dists){values<-c(floor(values),ceiling(values));values<-values[!duplicated(values)]}
+      y<-dFUN[[dist]](values,x[1,"min"],x[1,"mode"],x[1,"max"],x[1,"shape"])
+      if(dist%in%discrete.dists){
+        y2<-data.frame(xc=seq(from=min(values),to=max(values),length.out=5e3))
+        y2$values<-floor(y2$xc)
+        y3<-data.frame(d=y,values=values)
+        ym<-merge(y2,y3,by="values")
+        values<-ym$xc
+        y<-ym$d
+      }
+      
+      z<-data.frame(
+        PDF=y,values=values,
+        dist=dist,
+        par=n,
+        pars=paste(
+          hyperPar[[dist]][1],"=",x[1,"min"],
+          "/",
+          hyperPar[[dist]][2],"=",x[1,"mode"],
+          "/",
+          hyperPar[[dist]][3],"=",x[1,"max"],
+          "/",
+          hyperPar[[dist]][4],"=",x[1,"shape"]))
+    }
+    
+    return(z)
+  })			
+  
+  resu<-do.call(rbind,resu)
+  
+  return(resu)
+  
 } 
- 
+
 combinePriorQuantiling<-function(L){
 comb<-expand.grid(lapply(L,function(x){1:nrow(x)}))
 colnames(comb)<-names(L)
