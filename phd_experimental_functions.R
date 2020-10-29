@@ -44,6 +44,69 @@
   	  }
 #####PhD Experimental Functions######
 
+### Predict values and CIs from JAGS output, using model notation
+jags.predict<-function(
+	#JAGS object
+	jags,
+	#Dictionary of variables (dictating which jags variable is which coefficient)
+	var.dict,
+	# Data to predict using current coefficients
+	new.data,
+	# Inverse link function to use (must match one used on the JAGS script)
+	inv.link=inv.logit){
+  
+  
+  require(plyr)
+  require(dplyr)
+  require(stringr)
+  
+  # Named vector of which coefficients belong to which variable
+  coef<-setNames(object = var.dict$JAGS_coef,nm = var.dict$Variable)
+  
+  # Copying data.frame to predict
+  new.data2<-new.data
+  new.data2$Intercept<-1
+  
+  # Adding interactions
+  interaction.terms<-str_subset(string = var.dict$Variable,"\\:")
+  for(int in interaction.terms){
+    int.split<-str_split(int,"\\:")[[1]]
+    interaction.var<-apply(sapply(int.split,function(i){
+      new.data2[,i]}),1,prod)
+    new.data2[,int]<-interaction.var
+    }
+  
+  
+  # Change the new data.frame colnames to the JAGS models coefficients
+  colnames(new.data2)<-coef[colnames(new.data2)]
+  
+  # Convert it to a matrix
+  new.data2<-as.matrix(new.data2)
+  
+  # Get MCMC chains for relevant parameters and bind them to a matrix
+  do.call(cbind,jags$sims.list[colnames(new.data2)])-> CoefMatrix
+  
+  # result of the linear model
+  resu <- CoefMatrix %*% t(new.data2)
+  
+  # Applying the inverse link function 
+  resu <- inv.link(resu)
+  
+  resu.summ<-t(sapply(1:ncol(resu),function(x){
+    z<-resu[,x]
+    zz<-data.frame(mean=mean(z),median=median(z),lcl=quantile(z,.025),ucl=quantile(z,.975))
+    return(zz)
+    }))%>%
+    cbind(new.data)
+  
+  resu.list<-list(summary=resu.summ,full=resu)
+  return(resu.list)
+}
+
+
+
+
+
 ###Run stochastic simulations of populations
 StochTransMat<-function(N,surv,fec,prop,n.years=10,capping=Inf,verbose=T){
   if(class(N)=="matrix"){N<-as.vector(N)}
