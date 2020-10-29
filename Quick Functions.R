@@ -1,9 +1,28 @@
 ###Caio###
 
-na.rm<-function(x){x<-x[!is.na(x)];return(x)}
-inf2nan<-function(x){x[x%in%c(Inf,-Inf)]<-NaN;return(x)}
-cap<-function(x,max=Inf,min=-Inf){x[x>max]<-max;x[x>min]<-min;return(x)}
+read_excel_allsheets <- function(filename, tibble = FALSE) {
+    # I prefer straight data.frames
+    # but if you like tidyverse tibbles (the default with read_excel)
+    # then just pass tibble = TRUE
+    sheets <- readxl::excel_sheets(filename)
+    x <- lapply(sheets, function(X) readxl::read_excel(filename, sheet = X))
+    if(!tibble) x <- lapply(x, as.data.frame)
+    names(x) <- sheets
+    x
+}
 
+zero_pad<-function(x,w){
+require(stringr)
+y<-str_pad(x, w, side = "left", pad = "0")
+return(y)}	
+
+na2false<-function(x){
+  x[is.na(x)]<-FALSE
+  return(x)
+}
+
+null2false<-function(x){
+  if(length(x)==0){x<-FALSE};return(x)}
 #===2015-10-22
 	##Resumos
 		force.numeric<-function(x){as.numeric(as.character(x))}
