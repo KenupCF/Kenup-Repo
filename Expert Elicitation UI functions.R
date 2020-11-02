@@ -1,5 +1,3 @@
-# Expert Elicitation UI functions
-
 PERTSidebar<-function(suffix="",question_field="",defaultQuestion){
   
   if(!question_field%in%defaultQuestion$question){
