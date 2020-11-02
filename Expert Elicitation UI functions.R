@@ -144,7 +144,7 @@ proportionApp<-function(question_field="",suffix="",defaultDF,
               sidebarLayout(
                   sidebarPanel =
                     PERTSidebar(question_field=question_field,
-                                defaultQuestion=defaultAnswers),
+                                defaultQuestion=defaultDF),
                   mainPanel =  mainPanel(
         tabsetPanel(type = "tabs",
         tabPanel("Probability Distribution Plot",
@@ -155,7 +155,7 @@ proportionApp<-function(question_field="",suffix="",defaultDF,
                  # tableOutput(paste("recordtable",suffix,sep=""))),
         checkboxInput(inputId = "checkbox",
             label=HTML("<b>I am happy with these answers</b>"),
-            value = defaultAnswers%>%
+            value = defaultDF%>%
                     dplyr::filter(question==question_field)%>%
                     dplyr::pull(finishedQuestion)%>%
                     null2false
