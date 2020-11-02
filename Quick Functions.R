@@ -1,6 +1,18 @@
 ###Caio###
 
-	
+zero_pad<-function(x,w){
+require(stringr)
+y<-str_pad(x, w, side = "left", pad = "0")
+return(y)}	
+
+
+na2false<-function(x){
+  x[is.na(x)]<-FALSE
+  return(x)
+}
+
+
+null2false<-function(x){if(length(x)==0){x<-FALSE};return(x)}	
 	
 	step<-function(x){
 		y<-rep(0,length(x))
