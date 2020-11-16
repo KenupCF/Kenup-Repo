@@ -790,3 +790,28 @@ return(df3)
 
 # }
   
+
+
+# Reconstructing list of objects generated through parLapply
+
+reconstruct.parallel<-function(z){
+
+resu<-list()
+  
+for(i in 1:length(z)){
+
+x<-z[[i]]
+
+valid<-!sapply(x,is.null)
+
+indexes <- 1:sum(valid)  
+
+indexes <- indexes+length(resu)
+
+resu[indexes]<-z[[i]][valid]
+
+}
+return(resu)
+}
+
+
