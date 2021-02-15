@@ -5,7 +5,7 @@
 tablePERT<-function(data,varname=""){
   
   data2<-data%>%
-    dplyr::filter(question==varname,alias!="Average")
+    dplyr::filter(question%in%varname,alias!="Average")
   
   data_formatted<-data2%>%
     dplyr::select(alias,min,mode,max,shape,confidence)
