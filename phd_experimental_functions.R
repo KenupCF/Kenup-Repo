@@ -8,9 +8,9 @@ tablePERT<-function(data,varname=""){
     dplyr::filter(question%in%varname,alias!="Average")
   
   data_formatted<-data2%>%
-    dplyr::select(alias,min,mode,max,shape,confidence)
+    dplyr::select(question,alias,min,mode,max,shape,confidence)
   
-  colnames(data_formatted)<-c("Expert","Smaller plausible value","Most likely value","Greater plausible value","Shape Parameter","Confidence")  
+  colnames(data_formatted)<-c("Question","Expert","Smallest plausible value","Most likely value","Greatest plausible value","Shape Parameter","Confidence")  
   
   return(data_formatted) 
   
