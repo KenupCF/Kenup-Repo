@@ -18,9 +18,13 @@ tablePERT<-function(data,varname=""){
 
 
 ### Predict values and CIs from JAGS output, using model notation
+
+### Predict values and CIs from JAGS output, using model notation
 jags.predict<-function(
 	#JAGS object
 	jags,
+	#Which JAGS parameters describe random variation around the model mean (in SD units!)
+	err.term=NULL,
 	#Dictionary of variables (dictating which jags variable is which coefficient)
 	var.dict,
 	# Data to predict using current coefficients
@@ -59,9 +63,15 @@ jags.predict<-function(
   # Get MCMC chains for relevant parameters and bind them to a matrix
   do.call(cbind,jags$sims.list[colnames(new.data2)])-> CoefMatrix
   
-  # result of the linear model
-  resu <- CoefMatrix %*% t(new.data2)
+  # Get error terms for each MCMC values
+	if(!is.null(err.term)){
+		err<-sapply(jags$sims.list[[err.term]],function(e){rnorm(mean=0,n=1,sd=e)})  
+	}else{err<-0}
   
+  # result of the linear model
+  resu <- (CoefMatrix %*% t(new.data2)) + err
+
+ 
   # Applying the inverse link function 
   resu <- inv.link(resu)
   
