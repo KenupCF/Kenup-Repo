@@ -43,7 +43,8 @@ jags.predict<-function(
   # Copying data.frame to predict
   new.data2<-new.data
   new.data2$Intercept<-1
-  
+  new.data2<-new.data2[,var.dict$Variable]
+	
   # Adding interactions
   interaction.terms<-str_subset(string = var.dict$Variable,"\\:")
   for(int in interaction.terms){
