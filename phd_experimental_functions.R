@@ -18,19 +18,17 @@ tablePERT<-function(data,varname=""){
 
 
 ### Predict values and CIs from JAGS output, using model notation
-
-### Predict values and CIs from JAGS output, using model notation
 jags.predict<-function(
-	#JAGS object
-	jags,
-	#Which JAGS parameters describe random variation around the model mean (in SD units!)
-	err.term=NULL,
-	#Dictionary of variables (dictating which jags variable is which coefficient)
-	var.dict,
-	# Data to predict using current coefficients
-	new.data,
-	# Inverse link function to use (must match one used on the JAGS script)
-	inv.link=inv.logit){
+  #JAGS object
+  jags,
+  #Which JAGS parameters describe random variation around the model mean (in SD units!)
+  err.term=NULL,
+  #Dictionary of variables (dictating which jags variable is which coefficient)
+  var.dict,
+  # Data to predict using current coefficients
+  new.data,
+  # Inverse link function to use (must match one used on the JAGS script)
+  inv.link=inv.logit){
   
   
   require(plyr)
@@ -43,17 +41,17 @@ jags.predict<-function(
   # Copying data.frame to predict
   new.data2<-new.data
   new.data2$Intercept<-1
-  new.data2<-new.data2[,var.dict$Variable]
-	
+  
   # Adding interactions
   interaction.terms<-str_subset(string = var.dict$Variable,"\\:")
   for(int in interaction.terms){
     int.split<-str_split(int,"\\:")[[1]]
-    interaction.var<-apply(sapply(int.split,function(i){
-      new.data2[,i]}),1,prod)
+    interaction.var<-apply(matrix(sapply(int.split,function(i){
+      new.data2[,i]}),nrow = nrow(new.data2)),1,prod)
     new.data2[,int]<-interaction.var
-    }
+  }
   
+  new.data2<-new.data2[,var.dict$Variable]
   
   # Change the new data.frame colnames to the JAGS models coefficients
   colnames(new.data2)<-coef[colnames(new.data2)]
@@ -65,14 +63,14 @@ jags.predict<-function(
   do.call(cbind,jags$sims.list[colnames(new.data2)])-> CoefMatrix
   
   # Get error terms for each MCMC values
-	if(!is.null(err.term)){
-		err<-sapply(jags$sims.list[[err.term]],function(e){rnorm(mean=0,n=1,sd=e)})  
-	}else{err<-0}
+  if(!is.null(err.term)){
+    err<-sapply(jags$sims.list[[err.term]],function(e){rnorm(mean=0,n=1,sd=e)})  
+  }else{err<-0}
   
   # result of the linear model
   resu <- (CoefMatrix %*% t(new.data2)) + err
-
- 
+  
+  
   # Applying the inverse link function 
   resu <- inv.link(resu)
   
@@ -80,12 +78,14 @@ jags.predict<-function(
     z<-resu[,x]
     zz<-data.frame(mean=mean(z),median=median(z),lcl=quantile(z,.025),ucl=quantile(z,.975))
     return(zz)
-    }))%>%
+  }))%>%
     cbind(new.data)
   
   resu.list<-list(summary=resu.summ,full=resu)
   return(resu.list)
 }
+
+
 
 
 
