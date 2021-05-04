@@ -575,7 +575,7 @@ return(resu)
 } 
   
  
-priorPDF<-function(L){
+priorPDF<-function(L,n=5e3){
   require(mc2d)
   
   dFUN<-list(beta=dbeta,norm=dnorm,unif=dunif,binom=dbinom,pert=dpert,
@@ -625,11 +625,11 @@ priorPDF<-function(L){
     
     if(npars==1){
       lim<-qFUN[[dist]](c(.0001,.9999),x[1,1])
-      values<-seq(from=lim[1],to=lim[2],length.out=5e3)
+      values<-seq(from=lim[1],to=lim[2],length.out=n)
       if(dist%in%discrete.dists){values<-c(floor(values),ceiling(values));values<-values[!duplicated(values)]}
       y<-dFUN[[dist]](values,x[1,1])
       if(dist%in%discrete.dists){
-        y2<-data.frame(xc=seq(from=min(values),to=max(values),length.out=5e3))
+        y2<-data.frame(xc=seq(from=min(values),to=max(values),length.out=n))
         y2$values<-floor(y2$xc)
         y3<-data.frame(d=y,values=values)
         ym<-merge(y2,y3,by="values")
@@ -647,11 +647,11 @@ priorPDF<-function(L){
     
     if(npars==2){
       lim<-qFUN[[dist]](c(.0001,.9999),x[1,1],x[1,2])
-      values<-seq(from=lim[1],to=lim[2],length.out=5e3)
+      values<-seq(from=lim[1],to=lim[2],length.out=n)
       if(dist%in%discrete.dists){values<-c(floor(values),ceiling(values));values<-values[!duplicated(values)]}
       y<-dFUN[[dist]](values,x[1,1],x[1,2])
       if(dist%in%discrete.dists){
-        y2<-data.frame(xc=seq(from=min(values),to=max(values),length.out=5e3))
+        y2<-data.frame(xc=seq(from=min(values),to=max(values),length.out=n))
         y2$values<-floor(y2$xc)
         y3<-data.frame(d=y,values=values)
         ym<-merge(y2,y3,by="values")
@@ -670,11 +670,11 @@ priorPDF<-function(L){
     }
     if(npars==4 & dist =="pert"){
       lim<-qFUN[[dist]](c(0,1),x[1,"min"],x[1,"mode"],x[1,"max"],x[1,"shape"])
-      values<-seq(from=lim[1],to=lim[2],length.out=5e3)
+      values<-seq(from=lim[1],to=lim[2],length.out=n)
       if(dist%in%discrete.dists){values<-c(floor(values),ceiling(values));values<-values[!duplicated(values)]}
       y<-dFUN[[dist]](values,x[1,"min"],x[1,"mode"],x[1,"max"],x[1,"shape"])
       if(dist%in%discrete.dists){
-        y2<-data.frame(xc=seq(from=min(values),to=max(values),length.out=5e3))
+        y2<-data.frame(xc=seq(from=min(values),to=max(values),length.out=n))
         y2$values<-floor(y2$xc)
         y3<-data.frame(d=y,values=values)
         ym<-merge(y2,y3,by="values")
