@@ -29,9 +29,15 @@ require(dplyr)
 if(Conf>1 | Conf<0){stop("Confidence level must be between 0-1")}
 if(Min> Max | Min> Mode | Max < Mode){stop("Parameters Min, Mode and Max must be in increasing order")}
 
-# If confidence level is smaller than 1, calculate trueMin and trueMax. 
+# Check whether min and max are already at boundaries	
+onLowerBoundary<-Min==naturalMin
+onUpperBoundary<-Max==naturalMax
+	
+# If confidence level is smaller than 1, AND
+# both min and max are not both already at boundaries,
+# calculate trueMin and trueMax. 
 # Otherwise, trueMin and trueMax and provided Min and Max
-if(Conf!=1){
+if(Conf!=1 & !(onLowerBoundary & onUpperBoundary)){
 #Define range declared of values
 range<-Max-Min
 
@@ -64,9 +70,6 @@ grid<-expand.grid(list.min=list.min,list.max=list.max)%>%
 	
 #Probabilities to assess
 p.vec<-c(0+(rem.unc/2),1-(rem.unc/2))
-
-onLowerBoundary<-Min==naturalMin
-onUpperBoundary<-Max==naturalMax
 
 #Vector of comparisons
 comparison<-c(Min,Max)
