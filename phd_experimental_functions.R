@@ -621,8 +621,10 @@ priorPDF<-function(L,precision=5e3){
     x$dist<-dist
     x$dist<-as.character(x$dist)
     
+	  
     npars<-length(hyperPar[[dist]])
-    
+    class(x)<-"data.frame"
+	  
     if(npars==1){
       lim<-qFUN[[dist]](c(.0001,.9999),x[1,1])
       values<-seq(from=lim[1],to=lim[2],length.out=precision)
