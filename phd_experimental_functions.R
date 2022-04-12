@@ -74,7 +74,7 @@ jags.predict<-function(
   # Applying the inverse link function 
   resu <- inv.link(resu)
   
-  resu.summ<-t(sapply(1:ncol(resu),function(x){
+ resu.summ<-plyr::rbind.fill(lapply(1:ncol(resu),function(x){
     z<-resu[,x]
     zz<-data.frame(mean=mean(z),median=median(z),lcl=quantile(z,.025),ucl=quantile(z,.975))
     return(zz)
