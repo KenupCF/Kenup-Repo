@@ -16,7 +16,6 @@ tablePERT<-function(data,varname=""){
   
 }
 
-
 ### Predict values and CIs from JAGS output, using model notation
 jags.predict<-function(
   #JAGS object
@@ -28,7 +27,7 @@ jags.predict<-function(
   # Data to predict using current coefficients
   new.data,
   # Inverse link function to use (must match one used on the JAGS script)
-  inv.link=inv.logit){
+  inv.link=identity){
   
   
   require(plyr)
@@ -84,12 +83,6 @@ jags.predict<-function(
   resu.list<-list(summary=resu.summ,full=resu)
   return(resu.list)
 }
-
-
-
-
-
-
 
 ###Run stochastic simulations of populations
 StochTransMat<-function(N,surv,fec,prop,n.years=10,capping=Inf,verbose=T){
@@ -372,12 +365,7 @@ return(resu)
 
 }
 
-
-
 ###DECISION MAKING FUNCTIONS
-
-
-
 
 #Function to calculate an objective`s score
 ObjectiveScore<-function(x,minimize=FALSE,Max=NULL,Min=NULL){
@@ -504,11 +492,6 @@ priorSampling<-function(L,size,seed=NULL,method="random"){
 	
 	}
   
-
- 
-  
-  
-  
 priorSummary<-function(L,q=c(.025,.5,.975)){
   require(mc2d)
   # require(dplyr)
@@ -573,7 +556,6 @@ names(resu)<-names(L)
 return(resu) 
  
 } 
-  
  
 priorPDF<-function(L,precision=5e3){
   require(mc2d)
@@ -733,9 +715,7 @@ return(list(values.df=mat,prob=prob))
 
 
 }  
-  
-
- 
+   
 expand.grid.mixed<-function(data,old.index,new.index,L){
 class(data)<-"data.frame"
 df1<-data
@@ -754,9 +734,6 @@ df3[,new.index]<-1:nrow(df3)
 return(df3)
 
 }  
-
-
-
 
 # parallelSwitch<-function(switch=c(FALSE,TRUE),cl=NULL,s){
 
@@ -843,5 +820,4 @@ resu[indexes]<-z[[i]][valid]
 }
 return(resu)
 }
-
 
