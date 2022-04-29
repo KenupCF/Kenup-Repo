@@ -26,7 +26,7 @@ createDesignMatrix<-function(vec,firstIntercept=TRUE){
 n<-length(levels(vec))
 
 resu<-sapply(1:n,function(x){
-vec==levels(vec)[n]
+vec==levels(vec)[x]
 })
 
 if(is.null(dim(resu))){
