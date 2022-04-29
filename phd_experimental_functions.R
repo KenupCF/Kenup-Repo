@@ -16,6 +16,35 @@ tablePERT<-function(data,varname=""){
   
 }
 
+
+createDesignMatrix<-function(vec,firstIntercept=TRUE){
+
+# This functions converts a single vector of categories into a design matrix of dummy variables
+# (where each column is the presence of a category
+
+# n is the number of categories in the vector
+n<-length(levels(vec))
+
+resu<-sapply(1:n,function(x){
+vec==levels(vec)[n]
+})
+
+if(is.null(dim(resu))){
+resu<-matrix(resu,ncol=n)
+}
+
+# If uses the first category as intercept, all values on first column is One
+if(firstIntercept){
+resu[,1]<-1
+}
+
+return(resu)
+
+}
+
+
+
+
 ### Predict values and CIs from JAGS output, using model notation
 jags.predict<-function(
   #JAGS object
