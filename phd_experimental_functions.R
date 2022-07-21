@@ -397,9 +397,12 @@ return(resu)
 ###DECISION MAKING FUNCTIONS
 
 #Function to calculate an objective`s score
-ObjectiveScore<-function(x,minimize=FALSE,Max=NULL,Min=NULL){
+ObjectiveScore<-function(x,minimize=FALSE,Max=NULL,Min=NULL,clip=TRUE){
   if(is.null(Max)){Max=max(x)}
   if(is.null(Min)){Min=min(x)}
+  if(clip){
+	  x[x<Min]<-Min
+          x[x>Max]<-Max}	
   y<- (x - Min) / (Max-Min)
   if(minimize){y<- 1 - y}
   return(y)}
