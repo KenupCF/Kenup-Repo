@@ -150,7 +150,22 @@ do.call(cbind, lapply(x, is.nan))
 					str.resu[s]<-paste(str.div,collapse="\n")}
 			}
 			return(str.resu)}
-	###Matemática e estatística
+###Matemática e estatística
+		
+		floor_digit<-function(x,digits=0){
+				y<-x*(10^digits)
+				y<-floor(y)
+				y<-y/(10^digits)
+				return(y)
+			}
+
+		ceiling_digit<-function(x,digits=0){
+			y<-x*(10^digits)
+			y<-ceiling(y)
+			y<-y/(10^digits)
+			return(y)
+		}
+		
 		roundUp <- function(x) 10^ceiling(log10(x))
 		##inverso
 			inv<-function(x){1/x} 
