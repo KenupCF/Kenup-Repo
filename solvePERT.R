@@ -164,8 +164,8 @@ winner<-which(rev.eng.error==min(rev.eng.error,na.rm=T)) #which set of values mi
 
 resu<-
 	list(
-	trueMin=grid[winner,1]*(!onLowerBoundary) + (Min*onLowerBoundary),
-	trueMax=grid[winner,2]*(!onUpperBoundary) + (Max*onUpperBoundary),
+	trueMin=mean(grid[winner,1])*(!onLowerBoundary) + (Min*onLowerBoundary),
+	trueMax=mean(grid[winner,2])*(!onUpperBoundary) + (Max*onUpperBoundary),
 	RMSE=min(rev.eng.error,na.rm=T))
 } else{
 resu<-list(trueMin=Min,trueMax=Max,RMSE=0)
