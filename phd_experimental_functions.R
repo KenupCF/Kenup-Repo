@@ -283,6 +283,7 @@ estimateBUGShyperPars<-function(input,parDist,start=list(),method=c("BUGSoutput"
   
   ###Importing Packages
   require(dplyr)
+  require(tidyr)
   require(stringr)
   require(abind)
   require(fitdistrplus)
@@ -350,7 +351,8 @@ estimateBUGShyperPars<-function(input,parDist,start=list(),method=c("BUGSoutput"
   # p
   #bind and return all data.frames created during loop
   hyperPars<-rbind.fill(hyperPars)
-  return(hyperPars)
+  resu<-tidyr::spread(hyperPars,key=HyperPar,value=Value)
+  return(resu)
   
 }
 
