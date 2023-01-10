@@ -329,6 +329,11 @@ estimateBUGShyperPars<-function(input,parDist,start=list(),method=c("BUGSoutput"
     
     
     x=as.numeric(array[,,par])
+    
+    # Change one value of simulated values so it is not a sum-zero - this will estimate a very certain, very small value, instead of straight zero.
+    if(sum(x)==0){x[1]<-10e-3}
+    if(var(x)==0){x[1]<-x[1]*(1+10e-3)}
+    
     #use function  `fitdistr` to estimate hyperparameters from MCMC values
     temp<-fitdistrplus::fitdist(
       data = x,
