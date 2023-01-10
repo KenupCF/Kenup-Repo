@@ -1,4 +1,11 @@
 ###Caio###
+AddToList<-function(x,name,value){
+  if(class(x)!="list"){stop("x must be a list.")}
+  x[[name]]<-value
+  return(x)
+}
+  
+
 
 zero_pad<-function(x,w){
 require(stringr)
