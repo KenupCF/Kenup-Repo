@@ -326,7 +326,9 @@ StochTransMat2<-function(N,surv,fec,prop,n.years=10,capping=Inf,verbose=T,DemSto
 }
 
 ###Get hyper-parameters from MCMC posteriors
-estimateBUGShyperPars<-function(input,parDist,start=list(),method=c("BUGSoutput","coda.samples","jagsUI")){
+estimateBUGShyperPars<-function(input,parDist,
+		start=list(),fix.arg=list(),estMethod=list(),defaultEstMethod="mme",
+		method=c("BUGSoutput","coda.samples","jagsUI")){
   
   ###Importing Packages
   require(dplyr)
@@ -334,7 +336,7 @@ estimateBUGShyperPars<-function(input,parDist,start=list(),method=c("BUGSoutput"
   require(stringr)
   require(abind)
   require(fitdistrplus)
-  
+  require(reshape2)
   options(stringsAsFactors = FALSE)
   ###Parameters
   #`model` is the fitted JAGS model
@@ -351,8 +353,8 @@ estimateBUGShyperPars<-function(input,parDist,start=list(),method=c("BUGSoutput"
   if(method=="jagsUI"){
     array<-abind(input$samples,along=3)
     array<-aperm(array,c(1,3,2))
-    
   }
+  
   if(method=="BUGSoutput"){
     
     array<-input$BUGSoutput$sims.array
@@ -379,15 +381,20 @@ estimateBUGShyperPars<-function(input,parDist,start=list(),method=c("BUGSoutput"
     
     # Change one value of simulated values so it is not a sum-zero - this will estimate a very certain, very small value, instead of straight zero.
     if(sum(x)==0){x[1]<-10e-3}
-    if(var(x)==0){x[1]<-x[1]*(1+10e-3)}
+    if(var(x)==0 & (!distrib%in%c("bern"))){x[1]<-x[1]*(1+10e-3)}
     
     #use function  `fitdistr` to estimate hyperparameters from MCMC values
-    temp<-fitdistrplus::fitdist(
+    fit<-fitdistrplus::fitdist(
       data = x,
-      method="mme",
-      distr=distrib)$estimate    
-    
-    temp<-c(temp,Mean=mean(x),median=as.numeric(quantile(x,0.5)),lcl=as.numeric(quantile(x,0.025)),ucl=as.numeric(quantile(x,0.975)),min=min(x),max=max(x))
+      method=ifelse(is.null(estMethod[[tpar]]),defaultEstMethod,estMethod[[tpar]]),
+      distr=distrib,
+	  order=1,
+	  fix.arg=fix.arg[[tpar]],
+	  start=start[[tpar]])
+	  
+	temp<-fit$estimate
+	fixed<-unlist(fit$fix.arg)
+    temp<-c(temp,fixed,Mean=mean(x),median=as.numeric(quantile(x,0.5)),lcl=as.numeric(quantile(x,0.025)),ucl=as.numeric(quantile(x,0.975)),min=min(x),max=max(x))
     #create a data.frame with all hyperparameters of the current parameter
     hyperPars[[p]]<-
       # return(
