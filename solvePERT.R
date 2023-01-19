@@ -5,7 +5,7 @@
 
 #Function to find the true Min and Max values of a PERT distribution based on a 4-point survey
 solvePERT<-function(Mode,Min,Max,Shape=4,
-					Conf=1,precision=1,
+					Conf=1,precision=100,
 					naturalMax=Inf,naturalMin=-Inf,second.run=T){
 
 
@@ -16,7 +16,7 @@ solvePERT<-function(Mode,Min,Max,Shape=4,
 #Max: The greatest plausible value, as answered by the expert
 #Shape: A shape parameter, defaults to 4
 #Conf: The level of confidence the researcher has the true value is between Min and Max
-#precision: The precision for generation of candidate true Min and Max values
+#precision: The precision for generation of candidate true Min and Max values (expressed as number of candidate values analysed)
 #naturalMax: A natural upper limit on the possible values (e.g. probabilities cannot be higher than 1)
 #naturalMin: A natural lower limit on the possible values (e.g. probabilities cannot be lower than 1)
 #second.run: Wether to look for candidate values in two-steps, for greater precision
@@ -48,12 +48,12 @@ dist2Min<-abs(Min-naturalMin)
 dist2Max<-abs(Max-naturalMax)
 
 #Create a vector of candidate minimum values
-list.min<-c(seq(from=Min-(range*3),to=Min,length.out=100),Min)
+list.min<-c(seq(from=Min-(range*3),to=Min,length.out=precision),Min)
 list.min<-list.min[!duplicated(list.min)]
 # if(length(list.min)<10){list.min<-seq(from=naturalMin+1e-5,to=Min,length.out=10)}
 
 #Create a vector of candidate max values
-list.max<-c(Max,seq(to=Max+(range*3),from=Max,length.out=100))
+list.max<-c(Max,seq(to=Max+(range*3),from=Max,length.out=precision))
 list.max<-list.max[!duplicated(list.max)]
 # if(length(list.max)<10){list.max<-seq(from=naturalMax-1e-5,to=Max,length.out=10)}
 
@@ -64,6 +64,7 @@ max.error<-(Max-sapply(list.max,function(x){qpert(p = 1-(rem.unc/2),min = Min,mo
 grid<-expand.grid(list.min=list.min,list.max=list.max)%>%
 	#remove impossible entries
 	filter(list.max>list.min,list.min<=Mode,list.max>=Mode)%>%
+	# remove duplicated entries
 	filter(!duplicated(data.frame(list.max,list.min)))	
 
 
